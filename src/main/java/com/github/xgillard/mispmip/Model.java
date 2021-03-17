@@ -24,20 +24,31 @@ public class Model {
         model.set(GRB.IntAttr.ModelSense, -1); // maximization
 
         for (int i = 0; i < g.nb_vars; i++) {
-            this.vars[i] = this.model.addVar(0,1,g.weights[i], GRB.BINARY, "x"+i);
+            this.vars[i] = this.model.addVar(0,1,1, GRB.BINARY, "x"+i);
         }
         for (int i = 0; i < g.nb_vars; i++) {
             for (int j = 0; j < g.nb_vars; j++) {
-                if (i == j) { continue; }
+                if (i == j) {
+                    g.adj_matrix[i][j] = false;
+                    continue;
+                }
                 if (g.adj_matrix[i][j]) {
                     GRBLinExpr expr = new GRBLinExpr();
+
                     expr.addTerm(1, this.vars[i]);
                     expr.addTerm(1, this.vars[j]);
 
-                    this.model.addConstr(expr, GRB.LESS_EQUAL, Math.max(g.weights[i], g.weights[j]), "constraint "+i+" or "+ j);
+                    this.model.addConstr(expr, GRB.LESS_EQUAL, 1, "constraint "+i+" or "+ j);
                 }
             }
         }
+
+        GRBLinExpr obj = new GRBLinExpr();
+        for (int i = 0; i < g.nb_vars; i++) {
+            obj.addTerm(g.weights[i], vars[i]);
+        }
+        model.setObjective(obj);
+
     }
 
     public void solve(int timeLimit, int threads) throws GRBException {

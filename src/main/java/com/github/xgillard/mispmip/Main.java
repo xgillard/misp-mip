@@ -20,6 +20,7 @@ public final class Main {
 
         if (args.length != 3) {
             System.err.println("Usage mispmip <INSTANCE> <duration> <threads>");
+            System.exit(0);
         }
 
         String inst     = args[0];
@@ -27,7 +28,7 @@ public final class Main {
         String threads  = args[2];
 
         Graph g = Graph.fromFile(inst);
-        Model m = new Model(g.complement());
+        Model m = new Model(g);//.complement());
         m.solve(Integer.parseInt(duration), Integer.parseInt(threads));
         showResult(inst, m);
     }

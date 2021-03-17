@@ -72,7 +72,7 @@ public final class Graph {
                 if (capture.matches()) {
                     int n = Integer.parseInt(capture.group("node"));
                     int w = Integer.parseInt(capture.group("weight"));
-                    g.setWeight(n-1, w);
+                    g.weights[n-1] = w;
                     continue;
                 }
                 capture = edgeDecl.matcher(line);
