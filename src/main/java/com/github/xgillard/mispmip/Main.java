@@ -27,7 +27,7 @@ public final class Main {
         String threads  = args[2];
 
         Graph g = Graph.fromFile(inst);
-        Model m = new Model(g);
+        Model m = new Model(g.complement());
         m.solve(Integer.parseInt(duration), Integer.parseInt(threads));
         showResult(inst, m);
     }
